@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="15" xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.lab.controllers.MainController"
+      style="-fx-padding: 20; -fx-background-color: #f5f5f5;">
+
+    <Label text="Генерация письма из шаблона" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+
+    <Separator/>
+
+    <!-- Должность получателя -->
+    <Label text="Должность получателя:" style="-fx-font-weight: bold;"/>
+    <TextField fx:id="recipientPostField" promptText="Например: Старосте"/>
+
+    <!-- ФИО получателя -->
+    <Label text="ФИО получателя:" style="-fx-font-weight: bold;"/>
+    <TextField fx:id="recipientNameField" promptText="Например: Петрову Петру Петровичу"/>
+
+    <!-- Организация -->
+    <Label text="Организация:" style="-fx-font-weight: bold;"/>
+    <TextField fx:id="organizationField" promptText="Например: ООО &quot;Станкин&quot;"/>
+
+    <!-- Тема письма -->
+    <Label text="Тема письма:" style="-fx-font-weight: bold;"/>
+    <TextField fx:id="subjectField" promptText="Например: О сдаче лабораторных работ"/>
+
+    <!-- ФИО отправителя -->
+    <Label text="ФИО отправителя (студент):" style="-fx-font-weight: bold;"/>
+    <TextField fx:id="studentNameField" promptText="Например: Иванову Ивану Ивановичу"/>
+
+    <!-- Тело письма -->
+    <Label text="Тело письма:" style="-fx-font-weight: bold;"/>
+    <TextArea fx:id="bodyField" promptText="Введите текст письма..." prefHeight="150" wrapText="true"/>
+
+    <Separator/>
+
+    <!-- Кнопка генерации -->
+    <Button fx:id="generateButton" text="Сгенерировать документ" 
+            onAction="#handleGenerateButtonAction"
+            style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;"/>
+
+    <!-- Лейбл статуса -->
+    <Label fx:id="statusLabel" style="-fx-text-fill: #2980b9;"/>
+
+</VBox>

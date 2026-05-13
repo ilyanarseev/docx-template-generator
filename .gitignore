@@ -36,6 +36,7 @@ Thumbs.db
 
 # Eclipse
 .classpath
+.factorypath
 .project
 .settings/
 .metadata/
