@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="15" xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.lab.controllers.AttachmentDialogController"
+      style="-fx-padding: 20; -fx-background-color: #f5f5f5;">
+
+    <Label text="Приложение" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+    
+    <Separator/>
+    
+    <Label text="Заголовок приложения:" style="-fx-font-weight: bold;"/>
+    <TextField fx:id="titleField" promptText="Например: Причина отмены лабораторной"/>
+    
+    <Label text="Содержание приложения:" style="-fx-font-weight: bold;"/>
+    <TextArea fx:id="contentField" promptText="Введите текст приложения..." prefHeight="200" wrapText="true"/>
+    
+    <Label text="Количество листов (страниц):" style="-fx-font-weight: bold;"/>
+    <Spinner fx:id="pageCountSpinner" min="1" max="100" initialValue="1" editable="true"/>
+    
+    <Separator/>
+    
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Отмена" onAction="#handleCancelAction" 
+                style="-fx-background-color: #95a5a6; -fx-text-fill: white;"/>
+        <Button text="Сохранить" onAction="#handleSaveAction" 
+                style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold;"/>
+    </HBox>
+    
+</VBox>

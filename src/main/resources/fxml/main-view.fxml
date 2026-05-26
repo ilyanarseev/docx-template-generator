@@ -4,47 +4,71 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<VBox spacing="15" xmlns="http://javafx.com/javafx/21"
+<VBox spacing="10" xmlns="http://javafx.com/javafx/21"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.lab.controllers.MainController"
       style="-fx-padding: 20; -fx-background-color: #f5f5f5;">
 
-    <Label text="Генерация письма из шаблона" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
-
+    <Label text="Генерация письма с приложениями" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+    
     <Separator/>
-
-    <!-- Должность получателя -->
-    <Label text="Должность получателя:" style="-fx-font-weight: bold;"/>
-    <TextField fx:id="recipientPostField" promptText="Например: Старосте"/>
-
-    <!-- ФИО получателя -->
-    <Label text="ФИО получателя:" style="-fx-font-weight: bold;"/>
-    <TextField fx:id="recipientNameField" promptText="Например: Петрову Петру Петровичу"/>
-
-    <!-- Организация -->
-    <Label text="Организация:" style="-fx-font-weight: bold;"/>
-    <TextField fx:id="organizationField" promptText="Например: ООО &quot;Станкин&quot;"/>
-
-    <!-- Тема письма -->
-    <Label text="Тема письма:" style="-fx-font-weight: bold;"/>
-    <TextField fx:id="subjectField" promptText="Например: О сдаче лабораторных работ"/>
-
-    <!-- ФИО отправителя -->
-    <Label text="ФИО отправителя (студент):" style="-fx-font-weight: bold;"/>
-    <TextField fx:id="studentNameField" promptText="Например: Иванову Ивану Ивановичу"/>
-
-    <!-- Тело письма -->
-    <Label text="Тело письма:" style="-fx-font-weight: bold;"/>
-    <TextArea fx:id="bodyField" promptText="Введите текст письма..." prefHeight="150" wrapText="true"/>
-
+    
+    <!-- Вкладки для разделения основной информации и приложений -->
+    <TabPane>
+        <!-- Вкладка 1: Основная информация о письме -->
+        <Tab text="Основная информация" closable="false">
+            <VBox spacing="10" style="-fx-padding: 15;">
+                <Label text="Должность получателя:" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="recipientPostField" promptText="Например: Старосте"/>
+                
+                <Label text="ФИО получателя:" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="recipientNameField" promptText="Например: Петрову Петру Петровичу"/>
+                
+                <Label text="Организация:" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="organizationField" promptText="Например: ООО &quot;Станкин&quot;"/>
+                
+                <Label text="Тема письма:" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="subjectField" promptText="Например: О сдаче лабораторных работ"/>
+                
+                <Label text="ФИО отправителя (студент):" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="studentNameField" promptText="Например: Иванов Роман Валерьевич"/>
+                
+                <Label text="Тело письма:" style="-fx-font-weight: bold;"/>
+                <TextArea fx:id="bodyField" promptText="Введите текст письма..." prefHeight="120" wrapText="true"/>
+            </VBox>
+        </Tab>
+        
+        <!-- Вкладка 2: Приложения -->
+        <Tab text="Приложения" closable="false">
+            <VBox spacing="10" style="-fx-padding: 15;">
+                <Label text="Список приложений к письму" style="-fx-font-size: 14; -fx-font-weight: bold;"/>
+                
+                <!-- Упрощённый ListView без cellFactory -->
+                <ListView fx:id="attachmentsListView" prefHeight="200"/>
+                
+                <HBox spacing="10">
+                    <Button text="Добавить приложение" onAction="#handleAddAttachmentAction" 
+                            style="-fx-background-color: #3498db; -fx-text-fill: white;"/>
+                    <Button text="Удалить выбранное" onAction="#handleRemoveAttachmentAction"
+                            style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
+                    <Button text="Редактировать" onAction="#handleEditAttachmentAction"
+                            style="-fx-background-color: #f39c12; -fx-text-fill: white;"/>
+                </HBox>
+                
+                <Label text="Примечание: для каждого приложения можно указать количество листов" 
+                       style="-fx-font-size: 11; -fx-text-fill: #7f8c8d;"/>
+            </VBox>
+        </Tab>
+    </TabPane>
+    
     <Separator/>
-
+    
     <!-- Кнопка генерации -->
     <Button fx:id="generateButton" text="Сгенерировать документ" 
             onAction="#handleGenerateButtonAction"
-            style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;"/>
-
-    <!-- Лейбл статуса -->
+            style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand; -fx-font-size: 14;"/>
+    
+    <!-- Статус -->
     <Label fx:id="statusLabel" style="-fx-text-fill: #2980b9;"/>
-
+    
 </VBox>
