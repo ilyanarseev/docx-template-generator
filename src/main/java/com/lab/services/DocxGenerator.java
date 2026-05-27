@@ -35,9 +35,7 @@ public class DocxGenerator {
 			replaceInHeadersAndFooters(document, placeholders);
 
 			// 4. Обработка приложений
-			if (attachments != null && !attachments.isEmpty()) {
-				processAttachments(document, attachments);
-			}
+			processAttachments(document, attachments);
 
 			// 5. Сохранение
 			try (FileOutputStream fos = new FileOutputStream(outputPath)) {
@@ -78,6 +76,7 @@ public class DocxGenerator {
 			}
 
 			String paragraphText = fullText.toString();
+			System.out.println(paragraphText);
 
 			// Если плейсхолдер найден
 			if (paragraphText.contains(ATTACHMENTS_PLACEHOLDER)) {
@@ -86,6 +85,8 @@ public class DocxGenerator {
 				// Текст ПОСЛЕ плейсхолдера (если есть)
 				String afterPlaceholder = paragraphText
 						.substring(paragraphText.indexOf(ATTACHMENTS_PLACEHOLDER) + ATTACHMENTS_PLACEHOLDER.length());
+
+				System.out.println("Очищение");
 
 				// Очистить параграф
 				while (paragraph.getRuns().size() > 0) {

@@ -13,7 +13,7 @@ public class MainApp extends Application {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main-view.fxml"));
 		VBox root = loader.load();
 
-		Scene scene = new Scene(root, 700, 700);
+		Scene scene = new Scene(root, 1010, 900);
 		primaryStage.setTitle("Docx template generator");
 		primaryStage.setScene(scene);
 		primaryStage.show();

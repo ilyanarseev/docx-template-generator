@@ -37,13 +37,129 @@ public class MainController {
 	private Button generateButton;
 	@FXML
 	private ListView<Attachment> attachmentsListView;
+	@FXML
+	private TextArea previewArea;
 
 	private ObservableList<Attachment> attachments = FXCollections.observableArrayList();
 
+	// Флаги для валидации
+	private boolean isRecipientPostValid = false;
+	private boolean isRecipientNameValid = false;
+	private boolean isOrganizationValid = false;
+	private boolean isStudentNameValid = false;
+
 	@FXML
 	private void initialize() {
-		// Просто установить список - toString() сам отобразит данные
 		attachmentsListView.setItems(attachments);
+
+		setupValidationListeners();
+		setupPreviewListeners();
+
+		generateButton.setDisable(true);
+		updatePreview();
+	}
+
+	private void setupValidationListeners() {
+		recipientPostField.textProperty().addListener((obs, oldVal, newVal) -> {
+			isRecipientPostValid = newVal != null && !newVal.trim().isEmpty();
+			updateGenerateButtonState();
+			updatePreview();
+		});
+
+		recipientNameField.textProperty().addListener((obs, oldVal, newVal) -> {
+			isRecipientNameValid = newVal != null && !newVal.trim().isEmpty();
+			updateGenerateButtonState();
+			updatePreview();
+		});
+
+		organizationField.textProperty().addListener((obs, oldVal, newVal) -> {
+			isOrganizationValid = newVal != null && !newVal.trim().isEmpty();
+			updateGenerateButtonState();
+			updatePreview();
+		});
+
+		studentNameField.textProperty().addListener((obs, oldVal, newVal) -> {
+			isStudentNameValid = newVal != null && !newVal.trim().isEmpty();
+			updateGenerateButtonState();
+			updatePreview();
+		});
+
+		subjectField.textProperty().addListener((obs, oldVal, newVal) -> updatePreview());
+		bodyField.textProperty().addListener((obs, oldVal, newVal) -> updatePreview());
+	}
+
+	private void setupPreviewListeners() {
+		recipientPostField.textProperty().addListener((obs, oldVal, newVal) -> updatePreview());
+		recipientNameField.textProperty().addListener((obs, oldVal, newVal) -> updatePreview());
+		organizationField.textProperty().addListener((obs, oldVal, newVal) -> updatePreview());
+		subjectField.textProperty().addListener((obs, oldVal, newVal) -> updatePreview());
+		studentNameField.textProperty().addListener((obs, oldVal, newVal) -> updatePreview());
+		bodyField.textProperty().addListener((obs, oldVal, newVal) -> updatePreview());
+
+		attachments.addListener((javafx.collections.ListChangeListener<Attachment>) change -> updatePreview());
+	}
+
+	private void updateGenerateButtonState() {
+		boolean allRequiredValid = isRecipientPostValid && isRecipientNameValid &&
+				isOrganizationValid && isStudentNameValid;
+		generateButton.setDisable(!allRequiredValid);
+
+		if (!allRequiredValid) {
+			statusLabel.setText("Заполните все обязательные поля");
+			statusLabel.setStyle("-fx-text-fill: #e67e22;");
+		} else if (subjectField.getText().isEmpty()) {
+			statusLabel.setText("Тема письма не заполнена (рекомендуется)");
+			statusLabel.setStyle("-fx-text-fill: #e67e22;");
+		} else {
+			statusLabel.setText("Все обязательные поля заполнены");
+			statusLabel.setStyle("-fx-text-fill: green;");
+		}
+	}
+
+	private void updatePreview() {
+		StringBuilder preview = new StringBuilder();
+
+		preview.append("═══════════════════════════════════════════════════════════\n");
+		preview.append("                                            ПРЕДПРОСМОТР ПИСЬМА\n");
+		preview.append("═══════════════════════════════════════════════════════════\n\n");
+
+		preview.append("Кому: ").append(getTextOrDefault(recipientPostField, "[не указано]"));
+		preview.append(" ").append(getTextOrDefault(recipientNameField, "[не указано]")).append("\n");
+		preview.append("Организация: ").append(getTextOrDefault(organizationField, "[не указано]")).append("\n\n");
+
+		preview.append("Тема: ").append(getTextOrDefault(subjectField, "[не указана]")).append("\n\n");
+
+		preview.append("Текст письма:\n");
+		preview.append("───────────────────────────────────────────────────────────\n");
+		preview.append(getTextOrDefault(bodyField, "[текст письма не указан]")).append("\n\n");
+
+		if (!attachments.isEmpty()) {
+			preview.append("───────────────────────────────────────────────────────────\n");
+			preview.append("Приложение:\n");
+			for (int i = 0; i < attachments.size(); i++) {
+				Attachment att = attachments.get(i);
+				preview.append("  ").append(i + 1).append(". ");
+				preview.append(att.getTitle());
+				preview.append(" на ").append(att.getPageCount()).append(" л.\n");
+			}
+			preview.append("\n");
+		}
+
+		preview.append("───────────────────────────────────────────────────────────\n");
+		preview.append("Студент ").append(getTextOrDefault(studentNameField, "[не указано]")).append("\n");
+
+		preview.append("\n═══════════════════════════════════════════════════════════\n");
+
+		previewArea.setText(preview.toString());
+		previewArea.setPrefHeight(350);
+	}
+
+	private String getTextOrDefault(TextField field, String defaultValue) {
+		return field.getText().isEmpty() ? defaultValue : field.getText();
+	}
+
+	private String getTextOrDefault(TextArea area, String defaultValue) {
+		return area.getText().isEmpty() ? defaultValue : area.getText();
 	}
 
 	@FXML
@@ -67,6 +183,7 @@ public class MainController {
 		if (selected != null) {
 			attachments.remove(selected);
 			statusLabel.setText("Приложение удалено");
+			updatePreview();
 		} else {
 			showAlert("Ошибка", "Выберите приложение для удаления");
 		}
@@ -94,10 +211,10 @@ public class MainController {
 				if (attachment == null) {
 					attachments.add(controller.getAttachment());
 				} else {
-					// Обновить отображение
 					attachmentsListView.refresh();
 				}
 				statusLabel.setText(attachment == null ? "Приложение добавлено" : "Приложение обновлено");
+				updatePreview();
 			}
 
 		} catch (Exception e) {
@@ -108,18 +225,27 @@ public class MainController {
 
 	@FXML
 	private void handleGenerateButtonAction() {
-		// Валидация
 		if (recipientPostField.getText().isEmpty() ||
 				recipientNameField.getText().isEmpty() ||
 				organizationField.getText().isEmpty() ||
 				studentNameField.getText().isEmpty()) {
 
-			statusLabel.setText("Ошибка: Заполните все обязательные поля!");
+			statusLabel.setText("❌ Ошибка: Заполните все обязательные поля!");
 			statusLabel.setStyle("-fx-text-fill: red;");
 			return;
 		}
 
-		// Формирование плейсхолдеров
+		if (subjectField.getText().isEmpty()) {
+			Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+			confirmAlert.setTitle("Подтверждение");
+			confirmAlert.setHeaderText("Тема письма не заполнена");
+			confirmAlert.setContentText("Вы не указали тему письма. Продолжить генерацию?");
+
+			if (confirmAlert.showAndWait().orElse(ButtonType.CANCEL) != ButtonType.OK) {
+				return;
+			}
+		}
+
 		Map<String, String> placeholders = new HashMap<>();
 		placeholders.put("{RECIPIENT_POST}", recipientPostField.getText());
 		placeholders.put("{RECIPIENT_NAME}", recipientNameField.getText());
@@ -129,7 +255,6 @@ public class MainController {
 		placeholders.put("{LETTER_BODY}",
 				bodyField.getText().isEmpty() ? "Текст письма не указан." : bodyField.getText());
 
-		// Сохранение файла
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Сохранить документ");
 		fileChooser.getExtensionFilters().add(
@@ -141,8 +266,6 @@ public class MainController {
 		if (saveFile != null) {
 			try {
 				String templatePath = getClass().getResource("/templates/template.docx").getPath();
-
-				// Генерация документа
 				DocxGenerator.generate(templatePath, saveFile.getAbsolutePath(), placeholders, attachments);
 
 				statusLabel.setText("Успешно! Документ сохранён: " + saveFile.getName());

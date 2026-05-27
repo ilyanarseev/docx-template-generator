@@ -100,25 +100,4 @@ public class AttachmentGenerator {
 		XWPFParagraph empty = document.createParagraph();
 		empty.createRun().setText("");
 	}
-
-	/**
-	 * Создание текстового списка приложений для вставки в тело письма
-	 */
-	public static String createAttachmentsListText(List<Attachment> attachments) {
-		if (attachments == null || attachments.isEmpty()) {
-			return "";
-		}
-
-		StringBuilder sb = new StringBuilder();
-		sb.append("\n\nПриложение:\n");
-
-		for (int i = 0; i < attachments.size(); i++) {
-			Attachment att = attachments.get(i);
-			sb.append(i + 1).append(". ");
-			sb.append(att.getTitle());
-			sb.append(" на ").append(att.getPageCount()).append(" л.\n");
-		}
-
-		return sb.toString();
-	}
 }
