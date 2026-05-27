@@ -28,14 +28,14 @@
                     <TextField fx:id="recipientNameField" promptText="Например: Петрову Петру Петровичу"/>
                     
                     <Label text="Организация:" style="-fx-font-weight: bold;"/>
-                    <TextField fx:id="organizationField" promptText="Например: ООО &quot;Станкин&quot;"/>
+                    <TextField fx:id="organizationField" promptText="Например: МГТУ &quot;Станкин&quot;"/>
                 </VBox>
             </TitledPane>
             
-            <TitledPane text="✍️ Информация об отправителе" animated="false" expanded="true">
+            <TitledPane text="Информация об отправителе" animated="false" expanded="true">
                 <VBox spacing="8" style="-fx-padding: 10;">
                     <Label text="ФИО отправителя (студент):" style="-fx-font-weight: bold;"/>
-                    <TextField fx:id="studentNameField" promptText="Например: Иванов Роман Валерьевич"/>
+                    <TextField fx:id="studentNameField" promptText="Например: Иванов Иван Иванович"/>
                 </VBox>
             </TitledPane>
             
